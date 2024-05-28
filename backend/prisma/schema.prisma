@@ -130,7 +130,6 @@ model Application {
   positionId           Int
   candidateId          Int
   applicationDate      DateTime
-  status               String
   currentInterviewStep Int
   notes                String?
   position             Position       @relation(fields: [positionId], references: [id])

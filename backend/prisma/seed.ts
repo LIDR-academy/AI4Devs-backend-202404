@@ -6,14 +6,14 @@ async function main() {
   // Create Companies
   const company1 = await prisma.company.create({
     data: {
-      name: 'Tech Corp',
+      name: 'LTI',
     },
   });
 
   // Create Interview Flows
   const interviewFlow1 = await prisma.interviewFlow.create({
     data: {
-      description: 'Standard interview process',
+      description: 'Standard development interview process',
     },
   });
 
@@ -34,6 +34,15 @@ async function main() {
       jobDescription: 'Full-stack development',
       companyId: company1.id,
       interviewFlowId: interviewFlow1.id,
+      salaryMin: 50000,
+      salaryMax: 80000,
+      employmentType: 'Full-time',
+      benefits: 'Health insurance, 401k, Paid time off',
+      contactInfo: 'hr@lti.com',
+      requirements: '3+ years of experience in software development, knowledge in React and Node.js',
+      responsibilities: 'Develop, test, and maintain software solutions.',
+      companyDescription: 'LTI is a leading HR solutions provider.',
+      applicationDeadline: new Date('2024-12-31')
     },
   });
 
@@ -47,6 +56,15 @@ async function main() {
       jobDescription: 'Data analysis and machine learning',
       companyId: company1.id,
       interviewFlowId: interviewFlow2.id,
+      salaryMin: 60000,
+      salaryMax: 90000,
+      employmentType: 'Full-time',
+      benefits: 'Health insurance, 401k, Paid time off, Stock options',
+      contactInfo: 'hr@lti.com',
+      requirements: 'Master degree in Data Science or related field, proficiency in Python and R',
+      responsibilities: 'Analyze data sets to derive business insights and develop predictive models.',
+      companyDescription: 'LTI is a leading HR solutions provider.',
+      applicationDeadline: new Date('2024-12-31')
     },
   });
 
@@ -55,7 +73,7 @@ async function main() {
     data: {
       firstName: 'John',
       lastName: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@gmail.com',
       phone: '1234567890',
       address: '123 Main St',
       educations: {
@@ -71,7 +89,7 @@ async function main() {
       workExperiences: {
         create: [
           {
-            company: 'Company A',
+            company: 'Eventbrite',
             position: 'Software Developer',
             description: 'Developed web applications',
             startDate: new Date('2019-07-01'),
@@ -95,13 +113,13 @@ async function main() {
     data: {
       firstName: 'Jane',
       lastName: 'Smith',
-      email: 'jane.smith@example.com',
+      email: 'jane.smith@gmail.com',
       phone: '0987654321',
       address: '456 Elm St',
       educations: {
         create: [
           {
-            institution: 'University B',
+            institution: 'Maryland',
             title: 'MSc Data Science',
             startDate: new Date('2016-09-01'),
             endDate: new Date('2020-06-01'),
@@ -111,7 +129,7 @@ async function main() {
       workExperiences: {
         create: [
           {
-            company: 'Company B',
+            company: 'Gitlab',
             position: 'Data Scientist',
             description: 'Analyzed data sets',
             startDate: new Date('2020-07-01'),
@@ -131,27 +149,76 @@ async function main() {
     },
   });
 
+  const candidate3 = await prisma.candidate.create({
+    data: {
+      firstName: 'Carlos',
+      lastName: 'García',
+      email: 'carlos.garcia@example.com',
+      phone: '1122334455',
+      address: '789 Pine St',
+      educations: {
+        create: [
+          {
+            institution: 'Instituto Tecnológico',
+            title: 'Ingeniería en Sistemas Computacionales',
+            startDate: new Date('2017-01-01'),
+            endDate: new Date('2021-12-01'),
+          },
+        ],
+      },
+      workExperiences: {
+        create: [
+          {
+            company: 'Innovaciones Tech',
+            position: 'Ingeniero de Software',
+            description: 'Desarrollo y mantenimiento de aplicaciones de software',
+            startDate: new Date('2022-01-01'),
+            endDate: new Date('2023-01-01'),
+          },
+        ],
+      },
+      resumes: {
+        create: [
+          {
+            filePath: '/resumes/carlos_garcia.pdf',
+            fileType: 'application/pdf',
+            uploadDate: new Date(),
+          },
+        ],
+      },
+    },
+  });
+
   // Create Interview Types
   const interviewType1 = await prisma.interviewType.create({
+    data: {
+      name: 'HR Interview',
+      description: 'Assess overall fit, tech stack, salary range and availability',
+    },
+  });
+
+  const interviewType2 = await prisma.interviewType.create({
     data: {
       name: 'Technical Interview',
       description: 'Assess technical skills',
     },
   });
 
-  const interviewType2 = await prisma.interviewType.create({
+  const interviewType3 = await prisma.interviewType.create({
     data: {
-      name: 'HR Interview',
-      description: 'Assess cultural fit',
+      name: 'Hiring manager interview',
+      description: 'Assess cultural fit and professional goals',
     },
   });
+
+  
 
   // Create Interview Steps
   const interviewStep1 = await prisma.interviewStep.create({
     data: {
       interviewFlowId: interviewFlow1.id,
       interviewTypeId: interviewType1.id,
-      name: 'Initial Interview',
+      name: 'Initial Screening',
       orderIndex: 1,
     },
   });
@@ -165,12 +232,21 @@ async function main() {
     },
   });
 
+  const interviewStep3 = await prisma.interviewStep.create({
+    data: {
+      interviewFlowId: interviewFlow1.id,
+      interviewTypeId: interviewType3.id,
+      name: 'Manager Interview',
+      orderIndex: 2,
+    },
+  });
+
   // Create Employees
   const employee1 = await prisma.employee.create({
     data: {
       companyId: company1.id,
       name: 'Alice Johnson',
-      email: 'alice.johnson@example.com',
+      email: 'alice.johnson@lti.com',
       role: 'Interviewer',
     },
   });
@@ -178,9 +254,9 @@ async function main() {
   const employee2 = await prisma.employee.create({
     data: {
       companyId: company1.id,
-      name: 'Bob Smith',
-      email: 'bob.smith@example.com',
-      role: 'Interviewer',
+      name: 'Bob Miller',
+      email: 'bob.miller@lti.com',
+      role: 'Hiring Manager',
     },
   });
 
@@ -190,8 +266,7 @@ async function main() {
       positionId: position1.id,
       candidateId: candidate1.id,
       applicationDate: new Date(),
-      status: 'Pending',
-      currentInterviewStep: interviewStep1.id,
+      currentInterviewStep: interviewStep2.id,
     },
   });
 
@@ -200,8 +275,7 @@ async function main() {
       positionId: position2.id,
       candidateId: candidate1.id,
       applicationDate: new Date(),
-      status: 'Pending',
-      currentInterviewStep: interviewStep1.id,
+      currentInterviewStep: interviewStep2.id,
     },
   });
 
@@ -210,20 +284,19 @@ async function main() {
       positionId: position1.id,
       candidateId: candidate2.id,
       applicationDate: new Date(),
-      status: 'Pending',
-      currentInterviewStep: interviewStep1.id,
+      currentInterviewStep: interviewStep2.id,
     },
   });
 
   const application4 = await prisma.application.create({
     data: {
-      positionId: position2.id,
-      candidateId: candidate2.id,
+      positionId: position1.id,
+      candidateId: candidate3.id,
       applicationDate: new Date(),
-      status: 'Pending',
       currentInterviewStep: interviewStep1.id,
     },
   });
+
 
   // Create Interviews
   await prisma.interview.createMany({
@@ -234,7 +307,7 @@ async function main() {
         employeeId: employee1.id,
         interviewDate: new Date(),
         result: 'Passed',
-        score: 85,
+        score: 5,
         notes: 'Good technical skills',
       },
       {
@@ -243,7 +316,7 @@ async function main() {
         employeeId: employee1.id,
         interviewDate: new Date(),
         result: 'Passed',
-        score: 90,
+        score: 5,
         notes: 'Excellent data analysis skills',
       },
       {
@@ -252,18 +325,9 @@ async function main() {
         employeeId: employee1.id,
         interviewDate: new Date(),
         result: 'Passed',
-        score: 80,
+        score: 4,
         notes: 'Good technical skills',
-      },
-      {
-        applicationId: application4.id,
-        interviewStepId: interviewStep1.id,
-        employeeId: employee1.id,
-        interviewDate: new Date(),
-        result: 'Passed',
-        score: 88,
-        notes: 'Strong data analysis skills',
-      },
+      }
     ],
   });
 }
