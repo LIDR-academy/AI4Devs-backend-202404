@@ -17,6 +17,7 @@ export class Candidate {
     workExperience: WorkExperience[];
     resumes: Resume[];
     applications: Application[];
+    currentInterviewStep: string;
 
     constructor(data: any) {
         this.id = data.id;
@@ -29,17 +30,18 @@ export class Candidate {
         this.workExperience = data.workExperience || [];
         this.resumes = data.resumes || [];
         this.applications = data.applications || [];
+        this.currentInterviewStep = data.currentInterviewStep;
     }
 
     async save() {
-        const candidateData: any = {};
-
-        // Solo añadir al objeto candidateData los campos que no son undefined
-        if (this.firstName !== undefined) candidateData.firstName = this.firstName;
-        if (this.lastName !== undefined) candidateData.lastName = this.lastName;
-        if (this.email !== undefined) candidateData.email = this.email;
-        if (this.phone !== undefined) candidateData.phone = this.phone;
-        if (this.address !== undefined) candidateData.address = this.address;
+        const candidateData: any = {
+            currentInterviewStep: this.currentInterviewStep,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            phone: this.phone,
+            address: this.address,
+        };
 
         // Añadir educations si hay alguna para añadir
         if (this.education.length > 0) {
@@ -124,6 +126,16 @@ export class Candidate {
                 }
             }
         }
+    }
+
+    static async findApplicationsByPosition(positionId: number) {
+        return await prisma.application.findMany({
+            where: { positionId },
+            include: {
+                candidate: true,
+                interviews: true,
+            },
+        });
     }
 
     static async findOne(id: number): Promise<Candidate | null> {

@@ -63,3 +63,29 @@ export const findCandidateById = async (id: number): Promise<Candidate | null> =
         throw new Error('Error al recuperar el candidato');
     }
 };
+
+export const getCandidatesByPosition = async (positionId: number) => {
+  const applications = await Candidate.findApplicationsByPosition(positionId);
+
+  return applications.map(application => {
+    const averageScore = application.interviews.length
+      ? application.interviews.reduce((sum, interview) => sum + (interview.score || 0), 0) / application.interviews.length
+      : 0;
+
+    return {
+      fullName: `${application.candidate.firstName} ${application.candidate.lastName}`,
+      current_interview_step: application.currentInterviewStep,
+      averageScore,
+    };
+  });
+};
+
+export const updateCandidateStage = async (id: number, currentInterviewStep: string) => {
+  const candidate = await Candidate.findOne(id);
+  if (!candidate) {
+    throw new Error('Candidate not found');
+  }
+
+  candidate.currentInterviewStep = currentInterviewStep;
+  return await candidate.save();
+};
