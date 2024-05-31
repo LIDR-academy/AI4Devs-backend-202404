@@ -45,6 +45,6 @@
 
 13. vamos a realizar pruebas unitarias para asegurar el correcto funcionamiento de updateCandidateStageController y updateCandidateStage, quiero que sigas la misma estructura de los tests hechos para @positionController.test.ts  y @positionService.test.ts 
 
-
+14. ahora vamos a actualizar @api-spec.yaml  para añadir estos dos nuevos endpoints que hemos añadido
 
 Tickets => https://trello.com/b/QWY6fD2K/ats
