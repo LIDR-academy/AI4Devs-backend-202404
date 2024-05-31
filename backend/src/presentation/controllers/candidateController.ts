@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addCandidate, findCandidateById } from '../../application/services/candidateService';
+import { addCandidate, findCandidateById, updateCandidateStage } from '../../application/services/candidateService';
 
 export const addCandidateController = async (req: Request, res: Response) => {
     try {
@@ -31,4 +31,26 @@ export const getCandidateById = async (req: Request, res: Response) => {
     }
 };
 
+export const updateCandidateStageController = async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { positionId, currentInterviewStep } = req.body;
+        const positionIdNumber = parseInt(positionId);
+        if (isNaN(positionIdNumber)) {
+            return res.status(400).json({ error: 'Invalid position ID format' });
+        }
+        const currentInterviewStepNumber = parseInt(currentInterviewStep);
+        if (isNaN(currentInterviewStepNumber)) {
+            return res.status(400).json({ error: 'Invalid currentInterviewStep format' });
+        }
+        const updatedCandidate = await updateCandidateStage(id, positionIdNumber, currentInterviewStepNumber);
+        res.status(200).json({ message: 'Candidate stage updated successfully', data: updatedCandidate });
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            res.status(400).json({ message: 'Error updating candidate stage', error: error.message });
+        } else {
+            res.status(400).json({ message: 'Error updating candidate stage', error: 'Unknown error' });
+        }
+    }
+};
 export { addCandidate };
