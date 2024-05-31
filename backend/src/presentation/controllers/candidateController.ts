@@ -47,9 +47,13 @@ export const updateCandidateStageController = async (req: Request, res: Response
         res.status(200).json({ message: 'Candidate stage updated successfully', data: updatedCandidate });
     } catch (error: unknown) {
         if (error instanceof Error) {
-            res.status(400).json({ message: 'Error updating candidate stage', error: error.message });
+            if (error.message === 'Error: Application not found') {
+                res.status(404).json({ message: 'Application not found', error: error.message });
+            } else {
+                res.status(400).json({ message: 'Error updating candidate stage', error: error.message });
+            }
         } else {
-            res.status(400).json({ message: 'Error updating candidate stage', error: 'Unknown error' });
+            res.status(500).json({ message: 'Error updating candidate stage', error: 'Unknown error' });
         }
     }
 };
