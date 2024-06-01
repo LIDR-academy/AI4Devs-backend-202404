@@ -6,7 +6,7 @@ jest.mock('../../application/services/candidateService');
 
 describe('updateCandidateStageController', () => {
     it('should return 200 and updated candidate stage', async () => {
-      const req = { params: { id: '1' }, body: { positionId: 1, currentInterviewStep: 2 } } as unknown as Request;
+      const req = { params: { id: '1' }, body: { applicationId: 1, currentInterviewStep: 2 } } as unknown as Request;
       const res = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
@@ -14,7 +14,7 @@ describe('updateCandidateStageController', () => {
   
       (updateCandidateStage as jest.Mock).mockResolvedValue({
         id: 1,
-        positionId: 1,
+        applicationId: 1,
         candidateId: 1,
         currentInterviewStep: 2,
       });
@@ -26,7 +26,7 @@ describe('updateCandidateStageController', () => {
         message: 'Candidate stage updated successfully',
         data: {
           id: 1,
-          positionId: 1,
+          applicationId: 1,
           candidateId: 1,
           currentInterviewStep: 2,
         },

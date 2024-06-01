@@ -34,16 +34,16 @@ export const getCandidateById = async (req: Request, res: Response) => {
 export const updateCandidateStageController = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
-        const { positionId, currentInterviewStep } = req.body;
-        const positionIdNumber = parseInt(positionId);
-        if (isNaN(positionIdNumber)) {
+        const { applicationId, currentInterviewStep } = req.body;
+        const applicationIdNumber = parseInt(applicationId);
+        if (isNaN(applicationIdNumber)) {
             return res.status(400).json({ error: 'Invalid position ID format' });
         }
         const currentInterviewStepNumber = parseInt(currentInterviewStep);
         if (isNaN(currentInterviewStepNumber)) {
             return res.status(400).json({ error: 'Invalid currentInterviewStep format' });
         }
-        const updatedCandidate = await updateCandidateStage(id, positionIdNumber, currentInterviewStepNumber);
+        const updatedCandidate = await updateCandidateStage(id, applicationIdNumber, currentInterviewStepNumber);
         res.status(200).json({ message: 'Candidate stage updated successfully', data: updatedCandidate });
     } catch (error: unknown) {
         if (error instanceof Error) {

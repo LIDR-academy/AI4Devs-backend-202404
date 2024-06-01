@@ -234,9 +234,9 @@ paths:
             schema:
               type: object
               properties:
-                positionId:
+                applicationId:
                   type: integer
-                  description: ID of the position
+                  description: ID of the application
                 currentInterviewStep:
                   type: integer
                   description: Current interview step
