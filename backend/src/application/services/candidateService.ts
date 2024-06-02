@@ -63,3 +63,13 @@ export const findCandidateById = async (id: number): Promise<Candidate | null> =
         throw new Error('Error al recuperar el candidato');
     }
 };
+
+export const getCandidatesByPosition = async (positionId: number) => {
+    return await prisma.application.findMany({
+        where: { positionId: positionId },
+        include: {
+            candidate: true, // Asegúrate de incluir detalles del candidato
+            interviews: true  // Incluye entrevistas para calcular la puntuación media
+        }
+    });
+};

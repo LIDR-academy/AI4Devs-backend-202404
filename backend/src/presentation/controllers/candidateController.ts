@@ -31,4 +31,17 @@ export const getCandidateById = async (req: Request, res: Response) => {
     }
 };
 
+export const getCandidatesByPositionId = async (req: Request, res: Response) => {
+    try {
+        const positionId = parseInt(req.params.id);
+        if (isNaN(positionId)) {
+            return res.status(400).json({ message: "Invalid position ID" });
+        }
+        const candidates = await candidateService.getCandidatesByPosition(positionId);
+        res.json(candidates);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
+
 export { addCandidate };
