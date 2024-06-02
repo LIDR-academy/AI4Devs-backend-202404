@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import candidateRoutes from './routes/candidateRoutes';
 import { uploadFile } from './application/services/fileUploadService';
 import cors from 'cors';
+import positionRoutes from './routes/positionRoutes'; // Importar las rutas de posición
 
 // Extender la interfaz Request para incluir prisma
 declare global {
@@ -58,6 +59,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.type('text/plain'); 
   res.status(500).send('Something broke!');
 });
+
+app.use(positionRoutes); // Usar las rutas de posición
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
