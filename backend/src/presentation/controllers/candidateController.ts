@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { addCandidate, findCandidateById } from '../../application/services/candidateService';
+import { Application } from '../../domain/models/Application';
 
 export const addCandidateController = async (req: Request, res: Response) => {
     try {
@@ -28,6 +29,28 @@ export const getCandidateById = async (req: Request, res: Response) => {
         res.json(candidate);
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+export const updateCandidateInterviewStepController = async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { step, positionId } = req.body;
+        if (isNaN(id) || !Number.isInteger(step) || !Number.isInteger(positionId)) {
+            return res.status(400).json({ error: 'Invalid ID, step or positionId format' });
+        }
+        const application = await Application.findByCandidateAndPosition(id, positionId);
+        if (!application) {
+            throw new Error('Application not found');
+        }
+        await application.updateInterviewStep(step, positionId);
+        res.status(204).end();
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            res.status(400).json({ message: 'Error updating candidate', error: error.message });
+        } else {
+            res.status(400).json({ message: 'Error updating candidate', error: 'Unknown error' });
+        }
     }
 };
 

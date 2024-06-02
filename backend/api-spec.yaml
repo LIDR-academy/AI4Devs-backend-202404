@@ -185,4 +185,63 @@ paths:
           description: Invalid file type, only PDF and DOCX are allowed
         '500':
           description: Error during the file upload process
-
+  /position/{id}/candidates:
+    get:
+      summary: Get candidates for a position
+      description: Returns a list of candidates that have applied for a given position.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the position
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    fullName:
+                      type: string
+                    currentInterviewStep:
+                      type: integer
+                    averageScore:
+                      type: number
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Position not found
+  /candidate/{id}:
+    put:
+      summary: Update candidate's interview step
+      description: Updates the interview step of a candidate for a given position.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the candidate
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                step:
+                  type: integer
+                positionId:
+                  type: integer
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid ID, step or positionId supplied
+        '404':
+          description: Candidate not found

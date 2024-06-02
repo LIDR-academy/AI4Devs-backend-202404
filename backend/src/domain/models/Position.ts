@@ -83,5 +83,29 @@ export class Position {
         if (!data) return null;
         return new Position(data);
     }
+
+    async getCandidates() {
+        return await prisma.position.findUnique({
+            where: { id: this.id },
+            select: {
+                applications: {
+                    select: {
+                        candidate: {
+                            select: {
+                                firstName: true,
+                                lastName: true
+                            }
+                        },
+                        currentInterviewStep: true,
+                        interviews: {
+                            select: {
+                                score: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
 }
 
