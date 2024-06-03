@@ -67,3 +67,24 @@ export const findCandidateById = async (id: number): Promise<Candidate | null> =
     }
 };
 
+export const updateCandidateInterviewStepService = async (candidateId: number, positionId: number, newCurrentInterviewStep: number) => {
+    const application = await prisma.application.findFirst({
+        where: { candidateId, positionId },
+    });
+
+    if (!application) {
+        throw new Error('Application not found for the given candidate and position');
+    }
+
+    await prisma.application.update({
+        where: { id: application.id },
+        data: { currentInterviewStep: newCurrentInterviewStep },
+    });
+};
+
+export const isValidInterviewStep = async (interviewStepId: number): Promise<boolean> => {
+    const interviewStep = await prisma.interviewStep.findUnique({
+        where: { id: interviewStepId },
+    });
+    return !!interviewStep;
+};
