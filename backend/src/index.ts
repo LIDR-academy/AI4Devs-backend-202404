@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import candidateRoutes from './routes/candidateRoutes';
 import { uploadFile } from './application/services/fileUploadService';
 import cors from 'cors';
-
 // Extender la interfaz Request para incluir prisma
 declare global {
   namespace Express {
@@ -17,7 +16,6 @@ declare global {
 
 dotenv.config();
 const prisma = new PrismaClient();
-
 export const app = express();
 export default app;
 
@@ -49,6 +47,12 @@ app.use((req, res, next) => {
 
 const port = 3010;
 
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+  });
+}
+
 app.get('/', (req, res) => {
   res.send('Hola LTI!');
 });
@@ -59,6 +63,3 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send('Something broke!');
 });
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});

@@ -123,6 +123,8 @@ model Position {
   company           Company          @relation(fields: [companyId], references: [id])
   interviewFlow     InterviewFlow    @relation(fields: [interviewFlowId], references: [id])
   applications      Application[]
+  candidates  Candidate[] // This defines a relation to a Candidate model
+
 }
 
 model Application {

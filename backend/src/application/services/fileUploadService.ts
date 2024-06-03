@@ -29,7 +29,7 @@ const upload = multer({
 
 export const uploadFile = (req: Request, res: Response) => {
     const uploader = upload.single('file');
-    uploader(req, res, function (err) {
+    uploader(req, res, function (err: any) {
         if (err instanceof multer.MulterError) {
             // Manejo de errores específicos de Multer
             return res.status(500).json({ error: err.message });
