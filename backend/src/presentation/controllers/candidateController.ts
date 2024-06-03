@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { addCandidate, findCandidateById } from '../../application/services/candidateService';
+import { updateInterviewStep } from '../../application/services/applicationService';
 
 export const addCandidateController = async (req: Request, res: Response) => {
     try {
@@ -30,5 +31,20 @@ export const getCandidateById = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+export const updateInterviewStepController = async (req: Request, res: Response) => {
+    try {
+        const candidateId = parseInt(req.params.id);
+        const positionId = parseInt(req.body.positionId);
+        const newStep = parseInt(req.body.currentInterviewStep);
+        const application = await updateInterviewStep(candidateId, positionId, newStep);
+        res.json(application);
+    } catch (error) {
+        console.error('Error updating interview step:', error);
+        res.status(500).json({ error: error instanceof Error ? error.message : 'Unknown error' });
+    }
+};
+
+
 
 export { addCandidate };
