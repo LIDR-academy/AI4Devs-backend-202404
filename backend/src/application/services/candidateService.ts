@@ -3,6 +3,9 @@ import { validateCandidateData } from '../validator';
 import { Education } from '../../domain/models/Education';
 import { WorkExperience } from '../../domain/models/WorkExperience';
 import { Resume } from '../../domain/models/Resume';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export const addCandidate = async (candidateData: any) => {
     try {
@@ -62,4 +65,49 @@ export const findCandidateById = async (id: number): Promise<Candidate | null> =
         console.error('Error al buscar el candidato:', error);
         throw new Error('Error al recuperar el candidato');
     }
+};
+
+export const updateCandidateInterviewStep = async (candidateId: number) => {
+    // Obtener la aplicación actual del candidato
+    const application = await prisma.application.findFirst({
+        where: { candidateId },
+        include: { interviewStep: { include: { interviewFlow: true } }, position: true }
+    });
+
+    if (!application) {
+        throw new Error('Candidate not found.');
+    }
+
+    const currentStep = application.interviewStep;
+    const interviewFlowId = currentStep.interviewFlowId;
+
+    // Obtener el siguiente paso en el flujo de entrevistas
+    const nextStep = await prisma.interviewStep.findFirst({
+        where: {
+            interviewFlowId,
+            orderIndex: { gt: currentStep.orderIndex }
+        },
+        orderBy: { orderIndex: 'asc' }
+    });
+
+    if (!nextStep) {
+        throw new Error('Candidate is already at the final interview step.');
+    }
+
+    // Actualizar el paso actual de la entrevista en la aplicación
+    await prisma.application.update({
+        where: { id: application.id },
+        data: { currentInterviewStep: nextStep.id }
+    });
+
+    return {
+        message: 'Candidate interview step updated successfully',
+        candidate_id: candidateId,
+        previous_interview_step_id: currentStep.id,
+        previous_interview_step_name: currentStep.name,
+        new_interview_step_id: nextStep.id,
+        new_interview_step_name: nextStep.name,
+        interview_flow_id: interviewFlowId,
+        interview_flow_name: currentStep.interviewFlow.description
+    };
 };

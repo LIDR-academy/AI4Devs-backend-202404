@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addCandidate, getCandidateById } from '../presentation/controllers/candidateController';
+import { addCandidate, getCandidateById, updateCandidateInterviewStepController } from '../presentation/controllers/candidateController';
 
 const router = Router();
 
@@ -16,6 +16,8 @@ router.post('/', async (req, res) => {
     }
   }
 });
+
+router.put('/candidate/:id', updateCandidateInterviewStepController);
 
 router.get('/:id', getCandidateById);
 
