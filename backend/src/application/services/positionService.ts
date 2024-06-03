@@ -18,3 +18,17 @@ export const getCandidatesByPosition = async (positionId: number): Promise<Candi
     // console.log('Candidates: ', candidates);
     return candidates;
 };
+
+export const getPositionInterviewFlowById = async (positionId: number) => {
+    const interviewFlow = await prisma.position.findUnique({
+        where: { id: positionId },
+        select: {
+            interviewFlow: {
+                include: {
+                    interviewSteps: true
+                }
+            }
+        }
+    });
+    return interviewFlow;
+};

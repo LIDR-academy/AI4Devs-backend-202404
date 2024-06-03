@@ -208,3 +208,26 @@ paths:
           description: Invalid position ID supplied
         500:
           description: Internal server error
+  /position/{id}/interviewflow:
+    get:
+      summary: Retrieves the interview flow associated with a specific position ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the position
+      responses:
+        200:
+          description: Interview flow retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterviewFlow'
+        400:
+          description: Invalid position ID supplied
+        404:
+          description: Interview flow not found
+        500:
+          description: Internal server error
