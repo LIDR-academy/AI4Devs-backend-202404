@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { addCandidate, findCandidateById } from '../../application/services/candidateService';
+import { CandidateService } from '../../application/services/candidateService';
 
 export const addCandidateController = async (req: Request, res: Response) => {
     try {
         const candidateData = req.body;
-        const candidate = await addCandidate(candidateData);
+        const candidate = await CandidateService.addCandidate(candidateData);
         res.status(201).json({ message: 'Candidate added successfully', data: candidate });
     } catch (error: unknown) {
         if (error instanceof Error) {
@@ -21,7 +21,7 @@ export const getCandidateById = async (req: Request, res: Response) => {
         if (isNaN(id)) {
             return res.status(400).json({ error: 'Invalid ID format' });
         }
-        const candidate = await findCandidateById(id);
+        const candidate = await CandidateService.findCandidateById(id);
         if (!candidate) {
             return res.status(404).json({ error: 'Candidate not found' });
         }
@@ -31,4 +31,20 @@ export const getCandidateById = async (req: Request, res: Response) => {
     }
 };
 
-export { addCandidate };
+export async function updateCandidateInterviewStep(req: Request, res: Response) {
+    try {
+        const candidateId = parseInt(req.params.id);
+        const { interviewStepId } = req.body;
+
+        const updatedCandidate = await CandidateService.updateInterviewStep(candidateId, interviewStepId);
+
+        if (updatedCandidate) {
+            res.status(200).json(updatedCandidate);
+        } else {
+            res.status(404).send('Candidate not found');
+        }
+    } catch (error) {
+        res.status(500).send(error as Error);
+    }
+}
+
