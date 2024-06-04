@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axiosApi from './axiosApi';
 
 export const uploadCV = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-        const response = await axios.post('http://localhost:3010/upload', formData, {
+        const response = await axiosApi.post('/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -18,7 +18,7 @@ export const uploadCV = async (file) => {
 
 export const sendCandidateData = async (candidateData) => {
     try {
-        const response = await axios.post('http://localhost:3010/candidates', candidateData);
+        const response = await axiosApi.post('/candidates', candidateData);
         return response.data;
     } catch (error) {
         throw new Error('Error al enviar datos del candidato:', error.response.data);

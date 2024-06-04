@@ -1,5 +1,7 @@
 import { Router } from 'express';
-import { addCandidate, getCandidateById } from '../presentation/controllers/candidateController';
+import { addCandidate, getCandidateById,
+   getCandidatesByPosition, getInterviewStepsWithTypes, 
+   updateApplicationInterviewStep } from '../presentation/controllers/candidateController';
 
 const router = Router();
 
@@ -16,6 +18,23 @@ router.post('/', async (req, res) => {
     }
   }
 });
+
+
+router.get('/position/:id/candidates', getCandidatesByPosition);
+router.get('/interview-steps', getInterviewStepsWithTypes);
+router.put('/application/:applicationId/interview-step', updateApplicationInterviewStep);
+
+
+router.get('/positions', async (req, res) => {
+  try {
+    const positions = await req.prisma.position.findMany();
+    res.json(positions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al recuperar las posiciones' });
+  }
+});
+
 
 router.get('/:id', getCandidateById);
 

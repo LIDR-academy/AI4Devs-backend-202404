@@ -4,6 +4,7 @@ import { Trash } from 'react-bootstrap-icons';
 import FileUploader from './FileUploader';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import MainLayout from '../layouts/MainLayout';
 
 const AddCandidateForm = () => {
     const [candidate, setCandidate] = useState({
@@ -99,8 +100,7 @@ const AddCandidateForm = () => {
     };
 
     return (
-        <Container className="mt-5">
-            <h1 className="mb-4">Agregar Candidato</h1>
+        <MainLayout title="Agregar Candidato">
             <Card className="shadow p-4">
                 <Form onSubmit={handleSubmit}>
                     <Row>
@@ -274,7 +274,7 @@ const AddCandidateForm = () => {
                     {successMessage && <Alert variant="success" className="mt-3">{successMessage}</Alert>}
                 </Form>
             </Card>
-        </Container>
+        </MainLayout>
     );
 };
 
