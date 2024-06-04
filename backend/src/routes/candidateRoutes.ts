@@ -2,7 +2,6 @@ import { Router } from 'express';
 import {
   addCandidate,
   getCandidateById,
-  getCandidatesByPositionController,
   updateCandidateInterviewStepController,
 } from '../presentation/controllers/candidateController';
 
@@ -23,7 +22,6 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:id', getCandidateById);
-router.get('/position/:id/candidates', getCandidatesByPositionController);
 router.put('/:id', updateCandidateInterviewStepController);
 
 export default router;
