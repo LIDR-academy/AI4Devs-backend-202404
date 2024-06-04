@@ -3,6 +3,7 @@ import { validateCandidateData } from '../validator';
 import { Education } from '../../domain/models/Education';
 import { WorkExperience } from '../../domain/models/WorkExperience';
 import { Resume } from '../../domain/models/Resume';
+import { Position } from '../../domain/models/Position';
 
 export const addCandidate = async (candidateData: any) => {
     try {
@@ -88,4 +89,17 @@ export const updateCandidateStage = async (id: number, currentInterviewStep: str
 
   candidate.currentInterviewStep = currentInterviewStep;
   return await candidate.save();
+};
+
+export const getInterviewFlowByPosition = async (positionId: number) => {
+  const position = await Position.findOne(positionId);
+  if (!position) {
+    throw new Error('Position not found');
+  }
+
+  const interviewFlow = await position.getInterviewFlow();
+  return {
+    positionName: position.title,
+    interviewFlow,
+  };
 };

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addCandidate, findCandidateById, getCandidatesByPosition, updateCandidateStage } from '../../application/services/candidateService';
+import { addCandidate, findCandidateById, getCandidatesByPosition, updateCandidateStage, getInterviewFlowByPosition } from '../../application/services/candidateService';
 
 export const addCandidateController = async (req: Request, res: Response) => {
     try {
@@ -50,6 +50,16 @@ export const updateCandidateStageController = async (req: Request, res: Response
     res.status(200).json(updatedCandidate);
   } catch (error) {
     res.status(500).json({ error: 'Error actualizando la etapa del candidato' });
+  }
+};
+
+export const getInterviewFlowByPositionController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const interviewFlow = await getInterviewFlowByPosition(Number(id));
+    res.status(200).json(interviewFlow);
+  } catch (error) {
+    res.status(500).json({ error: 'Error obteniendo el flujo de entrevistas para la posición' });
   }
 };
         

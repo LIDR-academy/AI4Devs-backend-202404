@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addCandidate, getCandidateById, getCandidatesByPositionController, updateCandidateStageController } from '../presentation/controllers/candidateController';
+import { addCandidate, getCandidateById, getCandidatesByPositionController, updateCandidateStageController, getInterviewFlowByPositionController } from '../presentation/controllers/candidateController';
 
 const router = Router();
 
@@ -20,6 +20,8 @@ router.post('/', async (req, res) => {
 router.get('/:id', getCandidateById);
 
 router.get('/position/:id/candidates', getCandidatesByPositionController);
+
+router.get('/position/:id/interviewFlow', getInterviewFlowByPositionController);
 
 router.put('/candidate/:id', updateCandidateStageController);
 

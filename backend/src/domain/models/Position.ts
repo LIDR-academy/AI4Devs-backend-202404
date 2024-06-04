@@ -76,6 +76,16 @@ export class Position {
         }
     }
 
+    async getInterviewFlow() {
+        const interviewFlow = await prisma.interviewFlow.findUnique({
+            where: { id: this.interviewFlowId },
+            include: {
+                interviewSteps: true,
+            },
+        });
+        return interviewFlow;
+    }
+
     static async findOne(id: number): Promise<Position | null> {
         const data = await prisma.position.findUnique({
             where: { id: id },
@@ -84,4 +94,3 @@ export class Position {
         return new Position(data);
     }
 }
-
