@@ -3,6 +3,7 @@ import { validateCandidateData } from '../validator';
 import { Education } from '../../domain/models/Education';
 import { WorkExperience } from '../../domain/models/WorkExperience';
 import { Resume } from '../../domain/models/Resume';
+import { Application } from '../../domain/models/Application'; // Import Application model
 
 export const addCandidate = async (candidateData: any) => {
     try {
@@ -61,5 +62,31 @@ export const findCandidateById = async (id: number): Promise<Candidate | null> =
     } catch (error) {
         console.error('Error al buscar el candidato:', error);
         throw new Error('Error al recuperar el candidato');
+    }
+};
+
+export const updateCandidateInterviewStep = async (candidateId: number, applicationId: number, interviewStep: number): Promise<Candidate> => {
+    try {
+        const candidate = await Candidate.findOne(candidateId);
+        if (!candidate) {
+            throw new Error('Candidate not found');
+        }
+
+        // Find the application by ID
+        const application = await Application.findOne(applicationId);
+        if (!application) {
+            throw new Error('Application not found for the candidate');
+        }
+
+        // Update the interview step of the application
+        application.currentInterviewStep = interviewStep;
+
+        // Save the updated candidate
+        await application.save();
+
+        return candidate;
+    } catch (error) {
+        console.error('Error updating interview step:', error);
+        throw new Error('Error updating interview step');
     }
 };

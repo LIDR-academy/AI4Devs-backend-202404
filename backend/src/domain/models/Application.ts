@@ -50,4 +50,9 @@ export class Application {
         if (!data) return null;
         return new Application(data);
     }
+    static async findByPositionId(positionId: number): Promise<Application[]> {
+        const applicationsData = await prisma.application.findMany({ where: { positionId } });
+        return applicationsData.map(data => new Application(data));
+    }
 }
+

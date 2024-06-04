@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addCandidate, findCandidateById } from '../../application/services/candidateService';
+import { addCandidate, findCandidateById, updateCandidateInterviewStep } from '../../application/services/candidateService';
 
 export const addCandidateController = async (req: Request, res: Response) => {
     try {
@@ -26,6 +26,27 @@ export const getCandidateById = async (req: Request, res: Response) => {
             return res.status(404).json({ error: 'Candidate not found' });
         }
         res.json(candidate);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+export const updateCandidateInterviewStepController = async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { applicationId, interviewStep } = req.body;
+
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 'Invalid ID format' });
+        }
+
+        const updatedCandidate = await updateCandidateInterviewStep(id, applicationId, interviewStep);
+
+        if (!updatedCandidate) {
+            return res.status(404).json({ error: 'Candidate not found' });
+        }
+
+        res.json({ message: 'Interview step updated successfully', data: updatedCandidate });
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
     }

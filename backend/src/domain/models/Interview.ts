@@ -53,4 +53,18 @@ export class Interview {
         if (!data) return null;
         return new Interview(data);
     }
+
+    static async getAverageScoreByApplicationId(applicationId: number): Promise<number> {
+        const interviews = await prisma.interview.findMany({
+            where: { applicationId },
+            select: { score: true }
+        });
+
+        if (interviews.length === 0) {
+            return 0;
+        }
+
+        const totalScore = interviews.reduce((acc, curr) => acc + (curr.score || 0), 0);
+        return totalScore / interviews.length;
+    }
 }

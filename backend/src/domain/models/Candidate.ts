@@ -31,6 +31,10 @@ export class Candidate {
         this.applications = data.applications || [];
     }
 
+    getFullName(): string {
+        return `${this.firstName} ${this.lastName}`;
+    }
+
     async save() {
         const candidateData: any = {};
 
@@ -161,3 +165,4 @@ export class Candidate {
         return new Candidate(data);
     }
 }
+
