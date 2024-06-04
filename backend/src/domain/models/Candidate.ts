@@ -1,10 +1,10 @@
-import { PrismaClient, Prisma } from '@prisma/client';
 import { Education } from './Education';
 import { WorkExperience } from './WorkExperience';
 import { Resume } from './Resume';
 import { Application } from './Application';
+import PrismaSingleton from '../../infrastructure/prismaClient';
 
-const prisma = new PrismaClient();
+const prisma = PrismaSingleton.getInstance();
 
 export class Candidate {
   id?: number;

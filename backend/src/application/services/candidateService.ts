@@ -1,17 +1,21 @@
 import { Candidate } from '../../domain/models/Candidate';
 import { validateCandidateData } from '../validator';
+import { Application } from '../../domain/models/Application';
+import candidateEventEmitter from '../../infrastructure/eventEmitter';
+import ModelFactory from '../../domain/factories/modelFactory';
 import { Education } from '../../domain/models/Education';
 import { WorkExperience } from '../../domain/models/WorkExperience';
-import { Resume } from '../../domain/models/Resume';
-import { Application } from '../../domain/models/Application';
 
 const saveEducations = async (
-  educations: any[],
+  educations: Education[],
   candidateId: number,
   candidate: Candidate,
 ) => {
   for (const education of educations) {
-    const educationModel = new Education(education);
+    const educationModel = ModelFactory.createModel(
+      'Education',
+      education,
+    ) as Education;
     educationModel.candidateId = candidateId;
     await educationModel.save();
     candidate.education.push(educationModel);
@@ -19,12 +23,15 @@ const saveEducations = async (
 };
 
 const saveWorkExperiences = async (
-  workExperiences: any[],
+  workExperiences: WorkExperience[],
   candidateId: number,
   candidate: Candidate,
 ) => {
   for (const experience of workExperiences) {
-    const experienceModel = new WorkExperience(experience);
+    const experienceModel = ModelFactory.createModel(
+      'WorkExperience',
+      experience,
+    ) as WorkExperience;
     experienceModel.candidateId = candidateId;
     await experienceModel.save();
     candidate.workExperience.push(experienceModel);
@@ -36,12 +43,11 @@ const saveResumes = async (
   candidateId: number,
   candidate: Candidate,
 ) => {
-  const resumeModel = new Resume(cv);
+  const resumeModel = ModelFactory.createModel('Resume', cv) as any;
   resumeModel.candidateId = candidateId;
   await resumeModel.save();
   candidate.resumes.push(resumeModel);
 };
-
 const saveCandidateDetails = async (
   candidateData: any,
   candidateId: number,
@@ -71,12 +77,13 @@ export const addCandidate = async (candidateData: any) => {
     throw new Error(error);
   }
 
-  const candidate = new Candidate(candidateData); // Crear una instancia del modelo Candidate
+  const candidate = ModelFactory.createModel('Candidate', candidateData); // Crear una instancia del modelo Candidate
   try {
     const savedCandidate = await candidate.save(); // Guardar el candidato en la base de datos
     const candidateId = savedCandidate.id; // Obtener el ID del candidato guardado
 
-    await saveCandidateDetails(candidateData, candidateId, candidate);
+    await saveCandidateDetails(candidateData, candidateId, savedCandidate);
+    candidateEventEmitter.emit('candidateAdded', savedCandidate); // Emitir evento
     return savedCandidate;
   } catch (error: any) {
     if (error.code === 'P2002') {
@@ -124,6 +131,7 @@ export const updateCandidateInterviewStep = async (
 
     // Volver a obtener el candidato para asegurarnos de que tenemos la información más reciente
     const updatedCandidate = await Candidate.findOne(candidateId);
+    candidateEventEmitter.emit('candidateUpdated', updatedCandidate); // Emitir evento
     return updatedCandidate;
   } catch (error) {
     console.error(

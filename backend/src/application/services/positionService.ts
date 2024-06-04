@@ -1,12 +1,10 @@
 import { Candidate } from '../../domain/models/Candidate';
+import { DefaultScoreStrategy } from '../../domain/strategies/scoreStrategy';
+
+const scoreStrategy = new DefaultScoreStrategy();
 
 const calculateAverageScore = (interviews: any[]) => {
-  if (!interviews.length) return null;
-  const totalScore = interviews.reduce(
-    (sum, interview) => sum + (interview.score || 0),
-    0,
-  );
-  return totalScore / interviews.length;
+  return scoreStrategy.calculate(interviews);
 };
 
 const mapCandidateData = (candidate: Candidate, positionId: number) => {
