@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addCandidate, getCandidateById } from '../presentation/controllers/candidateController';
+import { addCandidate, getCandidateById, updateCandidateInterviewStepController } from '../presentation/controllers/candidateController';
 
 const router = Router();
 
@@ -18,5 +18,8 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:id', getCandidateById);
+
+// Nueva ruta para actualizar el paso de entrevista de un candidato
+router.put('/candidate/:id', updateCandidateInterviewStepController);
 
 export default router;

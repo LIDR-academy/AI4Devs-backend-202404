@@ -10,7 +10,7 @@ export class Application {
     applicationDate: Date;
     currentInterviewStep: number;
     notes?: string;
-    interviews: Interview[]; // Added this line
+    interviews: Interview[];
 
     constructor(data: any) {
         this.id = data.id;
@@ -19,7 +19,7 @@ export class Application {
         this.applicationDate = new Date(data.applicationDate);
         this.currentInterviewStep = data.currentInterviewStep;
         this.notes = data.notes;
-        this.interviews = data.interviews || []; // Added this line
+        this.interviews = data.interviews || [];
     }
 
     async save() {
@@ -49,5 +49,32 @@ export class Application {
         });
         if (!data) return null;
         return new Application(data);
+    }
+
+    static async findByPositionId(positionId: number): Promise<any[]> {
+        const applications = await prisma.application.findMany({
+            where: { positionId: positionId },
+            include: {
+                candidate: true,
+                interviews: true
+            }
+        });
+
+        return applications.map(app => ({
+            fullName: `${app.candidate.firstName} ${app.candidate.lastName}`,
+            currentInterviewStep: app.currentInterviewStep,
+            averageScore: app.interviews.reduce((acc, curr) => acc + (curr.score || 0), 0) / (app.interviews.length || 1)
+        }));
+    }
+
+    static async updateInterviewStep(candidateId: number, newStep: number): Promise<void> {
+        const result = await prisma.application.updateMany({
+            where: { candidateId: candidateId },
+            data: { currentInterviewStep: newStep }
+        });
+
+        if (result.count === 0) {
+            throw new Error('No se encontró ninguna aplicación para el candidato o no se pudo actualizar.');
+        }
     }
 }

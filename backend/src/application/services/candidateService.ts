@@ -3,6 +3,10 @@ import { validateCandidateData } from '../validator';
 import { Education } from '../../domain/models/Education';
 import { WorkExperience } from '../../domain/models/WorkExperience';
 import { Resume } from '../../domain/models/Resume';
+import { PrismaClient } from '@prisma/client';
+import { Application } from '../../domain/models/Application';
+
+const prisma = new PrismaClient();
 
 export const addCandidate = async (candidateData: any) => {
     try {
@@ -61,5 +65,14 @@ export const findCandidateById = async (id: number): Promise<Candidate | null> =
     } catch (error) {
         console.error('Error al buscar el candidato:', error);
         throw new Error('Error al recuperar el candidato');
+    }
+};
+
+export const updateCandidateInterviewStep = async (candidateId: number, newInterviewStep: number): Promise<void> => {
+    try {
+        await Application.updateInterviewStep(candidateId, newInterviewStep);
+    } catch (error) {
+        console.error('Error updating interview step:', error);
+        throw new Error('Error updating application');
     }
 };
