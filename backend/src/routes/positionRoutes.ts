@@ -1,13 +1,9 @@
-import { Router } from 'express';
-import { getPositionCandidates, getPositionInterviewFlow } from '../presentation/controllers/positionController';
+import { getCandidatesByPosition, getInterviewFlowByPosition } from '../presentation/controllers/positionController';
 
-const router = Router();
 
-// Ruta para obtener candidatos por ID de posición
-router.get('/:id/candidates', getPositionCandidates);
+const router = require('express').Router();
 
-// Ruta para obtener el flujo de entrevista por ID de posición
-router.get('/:id/interviewflow', getPositionInterviewFlow);
+router.get('/:id/candidates', getCandidatesByPosition);
+router.get('/:id/interviewflow', getInterviewFlowByPosition);
 
 export default router;
-

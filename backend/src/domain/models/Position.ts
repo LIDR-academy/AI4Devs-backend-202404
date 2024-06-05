@@ -83,5 +83,19 @@ export class Position {
         if (!data) return null;
         return new Position(data);
     }
-}
 
+    static async findOneWithInterviewFlow(id: number): Promise<Position | null> {
+        const data = await prisma.position.findUnique({
+            where: { id: id },
+            include: {
+                interviewFlow: {
+                    include: {
+                        interviewSteps: true
+                    }
+                }
+            }
+        });
+        if (!data) return null;
+        return new Position(data)
+    }
+}

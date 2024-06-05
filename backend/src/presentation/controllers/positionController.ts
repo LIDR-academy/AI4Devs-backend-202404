@@ -1,32 +1,30 @@
 import { Request, Response } from 'express';
-import { getCandidatesByPosition, getPositionInterviewFlowById } from '../../application/services/positionService';
+import { getCandidatesByPositionService, getInterviewFlowByPositionService } from '../../application/services/positionService';
 
-export const getPositionCandidates = async (req: Request, res: Response) => {
+export const getCandidatesByPosition = async (req: Request, res: Response) => {
     try {
         const positionId = parseInt(req.params.id);
-        if (isNaN(positionId)) {
-            return res.status(400).send({ message: "Invalid position ID" });
-        }
-        const candidates = await getCandidatesByPosition(positionId);
-        res.json(candidates);
+        const candidates = await getCandidatesByPositionService(positionId);
+        res.status(200).json(candidates);
     } catch (error) {
-        console.error('Error fetching candidates by position ID:', error);
-        res.status(500).send({ message: "Internal server error" });
+        if (error instanceof Error) {
+            res.status(500).json({ message: 'Error retrieving candidates', error: error.message });
+        } else {
+            res.status(500).json({ message: 'Error retrieving candidates', error: String(error) });
+        }
     }
 };
 
-export const getPositionInterviewFlow = async (req: Request, res: Response) => {
+export const getInterviewFlowByPosition = async (req: Request, res: Response) => {
     try {
         const positionId = parseInt(req.params.id);
-        if (isNaN(positionId)) {
-            return res.status(400).json({ error: 'Invalid position ID format' });
-        }
-        const interviewFlow = await getPositionInterviewFlowById(positionId);
-        if (!interviewFlow) {
-            return res.status(404).json({ error: 'Interview flow not found' });
-        }
-        res.json(interviewFlow);
+        const interviewFlow = await getInterviewFlowByPositionService(positionId);
+        res.status(200).json({ interviewFlow });
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        if (error instanceof Error) {
+            res.status(404).json({ message: 'Position not found', error: error.message });
+        } else {
+            res.status(500).json({ message: 'Server error', error: String(error) });
+        }
     }
 };

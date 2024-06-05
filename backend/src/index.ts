@@ -43,6 +43,7 @@ app.use('/candidates', candidateRoutes);
 // Route for file uploads
 app.post('/upload', uploadFile);
 
+// Route to get candidates by position
 app.use('/position', positionRoutes);
 
 app.use((req, res, next) => {
@@ -65,4 +66,3 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
-
