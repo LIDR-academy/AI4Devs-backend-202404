@@ -44,11 +44,11 @@ El backend es una aplicación Express escrita en TypeScript. El directorio `src`
 
 El directorio `prisma` contiene el esquema de Prisma.
 
-Tienes más información sobre buenas prácticas utilizadas en la [guía de buenas prácticas](./buenas_practicas.md).
+Tienes más información sobre buenas prácticas utilizadas en la [guía de buenas prácticas](./backend/ManifestoBuenasPracticas.md).
 
-Las especificaciones de todos los endpoints de API los tienes en [api-spec.yml](./api-spec.yml).
+Las especificaciones de todos los endpoints de API los tienes en [api-spec.yaml](./backend/api-spec.yaml).
 
-La descripción y diagrama del modelo de datos los tienes en [model-diagram.md](./model-diagram.md).
+La descripción y diagrama del modelo de datos los tienes en [ModeloDatos.md](./backend/ModeloDatos.md).
 
 
 ## Primeros Pasos
